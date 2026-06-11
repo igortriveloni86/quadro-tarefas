@@ -1,6 +1,6 @@
-const pool = require("../_db");
+import pool from "../_db.js";
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   try {
     if (req.method === "GET") {
       const { rows } = await pool.query(
@@ -44,4 +44,4 @@ module.exports = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
-};
+}

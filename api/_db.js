@@ -1,5 +1,6 @@
-const { Pool } = require("pg");
+import pg from "pg";
 
+const { Pool } = pg;
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
   throw new Error("Missing DATABASE_URL environment variable");
@@ -26,4 +27,4 @@ if (!pool) {
   global.__pgPool = pool;
 }
 
-module.exports = pool;
+export default pool;

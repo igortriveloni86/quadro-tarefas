@@ -1,6 +1,6 @@
-const pool = require("../_db");
+import pool from "../_db.js";
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   try {
     // extract id from url path
     const rawUrl = req.url || "";
@@ -63,4 +63,4 @@ module.exports = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
-};
+}
