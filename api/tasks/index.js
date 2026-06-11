@@ -4,7 +4,7 @@ module.exports = async (req, res) => {
   try {
     if (req.method === "GET") {
       const { rows } = await pool.query(
-        `SELECT id, title, description, column, position, priority, labels, created_date, updated_date
+        `SELECT id, title, description, column_name, position, priority, labels, created_date, updated_date
          FROM tasks ORDER BY position ASC`,
       );
       return res.status(200).json(rows);
@@ -14,19 +14,20 @@ module.exports = async (req, res) => {
       const {
         title,
         description = null,
-        column = "segunda",
         position = 0,
         priority = null,
         labels = [],
       } = req.body || {};
+      const column_name =
+        req.body?.column_name ?? req.body?.column ?? "segunda";
       const now = new Date().toISOString();
       const { rows } = await pool.query(
-        `INSERT INTO tasks (title, description, column, position, priority, labels, created_date, updated_date)
+        `INSERT INTO tasks (title, description, column_name, position, priority, labels, created_date, updated_date)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
         [
           title,
           description,
-          column,
+          column_name,
           position,
           priority,
           JSON.stringify(labels),

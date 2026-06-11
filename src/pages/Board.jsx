@@ -43,7 +43,7 @@ export default function Board() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
   });
 
-  const getColumnTasks = (columnId) => tasks.filter((t) => t.column === columnId);
+  const getColumnTasks = (columnId) => tasks.filter((t) => t.column_name === columnId);
 
   const handleAddTask = (columnId) => {
     setEditingTask(null);
@@ -53,7 +53,7 @@ export default function Board() {
 
   const handleEditTask = (task) => {
     setEditingTask(task);
-    setDefaultColumn(task.column);
+    setDefaultColumn(task.column_name);
     setDialogOpen(true);
   };
 
@@ -61,7 +61,7 @@ export default function Board() {
     if (editingTask) {
       updateTask.mutate({ id: editingTask.id, data: formData });
     } else {
-      const columnTasks = getColumnTasks(formData.column);
+      const columnTasks = getColumnTasks(formData.column_name);
       createTask.mutate({ ...formData, position: columnTasks.length });
     }
   };
@@ -80,12 +80,12 @@ export default function Board() {
       if (!old) return old;
       return old.map((t) =>
         String(t.id) === taskId
-          ? { ...t, column: newColumn, position: newIndex }
+          ? { ...t, column_name: newColumn, position: newIndex }
           : t
       );
     });
 
-    updateTask.mutate({ id: taskId, data: { column: newColumn, position: newIndex } });
+    updateTask.mutate({ id: taskId, data: { column_name: newColumn, position: newIndex } });
   };
 
   if (isLoading) {

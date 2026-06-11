@@ -38,7 +38,7 @@ export default function TaskDialog({ open, onClose, onSave, task, defaultColumn 
   const [form, setForm] = useState({
     title: '',
     description: '',
-    column: defaultColumn || 'segunda',
+    column_name: defaultColumn || 'segunda',
     priority: 'media',
     due_date: '',
     labels: [],
@@ -49,7 +49,7 @@ export default function TaskDialog({ open, onClose, onSave, task, defaultColumn 
       setForm({
         title: task.title || '',
         description: task.description || '',
-        column: task.column || defaultColumn || 'segunda',
+        column_name: task.column_name || task.column || defaultColumn || 'segunda',
         priority: task.priority || 'media',
         due_date: task.due_date || '',
         labels: task.labels || [],
@@ -58,7 +58,7 @@ export default function TaskDialog({ open, onClose, onSave, task, defaultColumn 
       setForm({
         title: '',
         description: '',
-        column: defaultColumn || 'segunda',
+        column_name: defaultColumn || 'segunda',
         priority: 'media',
         due_date: '',
         labels: [],
@@ -118,7 +118,7 @@ export default function TaskDialog({ open, onClose, onSave, task, defaultColumn 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Quadro</Label>
-              <Select value={form.column} onValueChange={(v) => setForm({ ...form, column: v })}>
+              <Select value={form.column_name} onValueChange={(v) => setForm({ ...form, column_name: v })}>
                 <SelectTrigger className="h-10">
                   <SelectValue />
                 </SelectTrigger>

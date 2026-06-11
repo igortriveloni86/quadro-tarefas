@@ -11,9 +11,11 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === "GET") {
-      const { rows } = await pool.query("SELECT * FROM tasks WHERE id = $1", [
-        id,
-      ]);
+      const { rows } = await pool.query(
+        `SELECT id, title, description, column_name, position, priority, labels, created_date, updated_date
+         FROM tasks WHERE id = $1`,
+        [id],
+      );
       if (!rows[0]) return res.status(404).json({ error: "Not found" });
       return res.status(200).json(rows[0]);
     }
@@ -22,19 +24,19 @@ module.exports = async (req, res) => {
       const {
         title,
         description = null,
-        column,
         position,
         priority = null,
         labels = [],
       } = req.body || {};
+      const column_name = req.body?.column_name ?? req.body?.column;
       const now = new Date().toISOString();
       const { rows } = await pool.query(
-        `UPDATE tasks SET title=$1, description=$2, column=$3, position=$4, priority=$5, labels=$6, updated_date=$7
+        `UPDATE tasks SET title=$1, description=$2, column_name=$3, position=$4, priority=$5, labels=$6, updated_date=$7
          WHERE id=$8 RETURNING *`,
         [
           title,
           description,
-          column,
+          column_name,
           position,
           priority,
           JSON.stringify(labels),
