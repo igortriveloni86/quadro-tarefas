@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import db from '@/lib/supabaseClient';
+import db from '@/lib/dbClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { DragDropContext } from '@hello-pangea/dnd';
 import { Plus, LayoutGrid } from 'lucide-react';
