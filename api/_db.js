@@ -20,8 +20,13 @@ if (connectionString) {
   poolConfig.password = process.env.PGPASSWORD;
   poolConfig.database = process.env.PGDATABASE;
   if (process.env.PGPORT) poolConfig.port = Number(process.env.PGPORT);
-} else if (process.env.POSTGRES_USER && process.env.POSTGRES_DB && process.env.POSTGRES_PASSWORD) {
-  poolConfig.host = process.env.PGHOST || process.env.POSTGRES_HOST || "localhost";
+} else if (
+  process.env.POSTGRES_USER &&
+  process.env.POSTGRES_DB &&
+  process.env.POSTGRES_PASSWORD
+) {
+  poolConfig.host =
+    process.env.PGHOST || process.env.POSTGRES_HOST || "localhost";
   poolConfig.user = process.env.POSTGRES_USER;
   poolConfig.password = process.env.POSTGRES_PASSWORD;
   poolConfig.database = process.env.POSTGRES_DB;
@@ -29,18 +34,22 @@ if (connectionString) {
 }
 
 if (!poolConfig.connectionString && !poolConfig.host) {
-  throw new Error("Missing DATABASE_URL environment variable or PostgreSQL connection settings");
+  throw new Error(
+    "Missing DATABASE_URL environment variable or PostgreSQL connection settings",
+  );
 }
 
-  const usesSsl = /sslmode=(require|verify-ca|verify-full)/i.test(
-    connectionString,
-  );
-  if (usesSsl || process.env.NODE_ENV === "production") {
-    poolConfig.ssl = {
-      rejectUnauthorized: false,
-    };
-  }
+const usesSsl = /sslmode=(require|verify-ca|verify-full)/i.test(
+  connectionString || "",
+);
+if (usesSsl || process.env.NODE_ENV === "production") {
+  poolConfig.ssl = {
+    rejectUnauthorized: false,
+  };
+}
 
+let pool = global.__pgPool;
+if (!pool) {
   pool = new Pool(poolConfig);
   global.__pgPool = pool;
 }
