@@ -21,15 +21,23 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "PUT") {
-      const {
-        title,
-        description = null,
-        position,
-        priority = null,
-        labels = [],
-      } = req.body || {};
-      const column_name = req.body?.column_name ?? req.body?.column;
+      const { rows: existingRows } = await pool.query(
+        `SELECT title, description, column_name, position, priority, labels
+         FROM tasks WHERE id = $1`,
+        [id],
+      );
+      if (!existingRows[0]) return res.status(404).json({ error: "Not found" });
+
+      const existingTask = existingRows[0];
+      const title = req.body?.title ?? existingTask.title;
+      const description = req.body?.description ?? existingTask.description;
+      const column_name =
+        req.body?.column_name ?? req.body?.column ?? existingTask.column_name;
+      const position = req.body?.position ?? existingTask.position;
+      const priority = req.body?.priority ?? existingTask.priority;
+      const labels = req.body?.labels ?? existingTask.labels;
       const now = new Date().toISOString();
+
       const { rows } = await pool.query(
         `UPDATE tasks SET title=$1, description=$2, column_name=$3, position=$4, priority=$5, labels=$6, updated_date=$7
          WHERE id=$8 RETURNING *`,
