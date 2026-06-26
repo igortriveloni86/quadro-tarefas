@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
     if (req.method === "GET") {
       const { rows } = await pool.query(
-        `SELECT id, title, description, column_name, position, priority, labels, created_date, updated_date
+        `SELECT id, title, description, column_name, position, priority, labels, due_date, created_date, updated_date
          FROM tasks ORDER BY position ASC`,
       );
       return res.status(200).json(rows);
@@ -19,13 +19,15 @@ export default async function handler(req, res) {
         position = 0,
         priority = null,
         labels = [],
+        due_date = null,
       } = req.body || {};
       const column_name =
         req.body?.column_name ?? req.body?.column ?? "segunda";
       const now = new Date().toISOString();
+      const dueDateIso = due_date ? new Date(due_date).toISOString() : null;
       const { rows } = await pool.query(
-        `INSERT INTO tasks (title, description, column_name, position, priority, labels, created_date, updated_date)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
+        `INSERT INTO tasks (title, description, column_name, position, priority, labels, due_date, created_date, updated_date)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
         [
           title,
           description,
@@ -33,6 +35,7 @@ export default async function handler(req, res) {
           position,
           priority,
           JSON.stringify(labels),
+          dueDateIso,
           now,
           now,
         ],

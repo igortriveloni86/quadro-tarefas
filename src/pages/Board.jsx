@@ -27,10 +27,10 @@ export default function Board() {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       setDialogOpen(false);
       setEditingTask(null);
-      toast({ title: 'Tarefa criada', description: 'A tarefa foi salva com sucesso.' });
+      toast({ title: 'Tarefa criada', description: 'A tarefa foi salva com sucesso.', duration: 3000 });
     },
     onError: (error) => {
-      toast({ title: 'Erro ao criar tarefa', description: error?.message || 'Não foi possível salvar a tarefa.' });
+      toast({ title: 'Erro ao criar tarefa', description: error?.message || 'Não foi possível salvar a tarefa.', duration: 5000 });
     },
   });
 
@@ -40,10 +40,10 @@ export default function Board() {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       setDialogOpen(false);
       setEditingTask(null);
-      toast({ title: 'Tarefa atualizada', description: 'As alterações foram salvas com sucesso.' });
+      toast({ title: 'Tarefa atualizada', description: 'As alterações foram salvas com sucesso.', duration: 3000 });
     },
     onError: (error) => {
-      toast({ title: 'Erro ao atualizar tarefa', description: error?.message || 'Não foi possível salvar as alterações.' });
+      toast({ title: 'Erro ao atualizar tarefa', description: error?.message || 'Não foi possível salvar as alterações.', duration: 5000 });
     },
   });
 

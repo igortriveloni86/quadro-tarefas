@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
     if (req.method === "GET") {
       const { rows } = await pool.query(
-        `SELECT id, title, description, column_name, position, priority, labels, created_date, updated_date
+        `SELECT id, title, description, column_name, position, priority, labels, due_date, created_date, updated_date
          FROM tasks WHERE id = $1`,
         [id],
       );
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
     if (req.method === "PUT") {
       const { rows: existingRows } = await pool.query(
-        `SELECT title, description, column_name, position, priority, labels
+        `SELECT title, description, column_name, position, priority, labels, due_date
          FROM tasks WHERE id = $1`,
         [id],
       );
@@ -40,9 +40,16 @@ export default async function handler(req, res) {
       const labels = req.body?.labels ?? existingTask.labels;
       const now = new Date().toISOString();
 
+      let due_date = existingTask.due_date;
+      if (req.body?.due_date !== undefined) {
+        due_date = req.body.due_date
+          ? new Date(req.body.due_date).toISOString()
+          : null;
+      }
+
       const { rows } = await pool.query(
-        `UPDATE tasks SET title=$1, description=$2, column_name=$3, position=$4, priority=$5, labels=$6, updated_date=$7
-         WHERE id=$8 RETURNING *`,
+        `UPDATE tasks SET title=$1, description=$2, column_name=$3, position=$4, priority=$5, labels=$6, due_date=$7, updated_date=$8
+         WHERE id=$9 RETURNING *`,
         [
           title,
           description,
@@ -50,6 +57,7 @@ export default async function handler(req, res) {
           position,
           priority,
           JSON.stringify(labels),
+          due_date,
           now,
           id,
         ],
