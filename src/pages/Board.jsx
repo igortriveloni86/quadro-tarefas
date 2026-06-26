@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { DragDropContext } from '@hello-pangea/dnd';
 import { Plus, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/use-toast';
 import BoardColumn from '@/components/board/BoardColumn';
 import TaskDialog from '@/components/board/TaskDialog';
 
@@ -26,6 +27,10 @@ export default function Board() {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       setDialogOpen(false);
       setEditingTask(null);
+      toast({ title: 'Tarefa criada', description: 'A tarefa foi salva com sucesso.' });
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao criar tarefa', description: error?.message || 'Não foi possível salvar a tarefa.' });
     },
   });
 
@@ -35,6 +40,10 @@ export default function Board() {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       setDialogOpen(false);
       setEditingTask(null);
+      toast({ title: 'Tarefa atualizada', description: 'As alterações foram salvas com sucesso.' });
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao atualizar tarefa', description: error?.message || 'Não foi possível salvar as alterações.' });
     },
   });
 

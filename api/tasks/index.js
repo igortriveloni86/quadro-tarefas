@@ -1,7 +1,9 @@
-import pool from "../_db.js";
+import pool, { ensureTasksDueDateColumn } from "../_db.js";
 
 export default async function handler(req, res) {
   try {
+    await ensureTasksDueDateColumn();
+
     if (req.method === "GET") {
       const { rows } = await pool.query(
         `SELECT id, title, description, column_name, position, priority, labels, created_date, updated_date

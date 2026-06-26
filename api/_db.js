@@ -54,4 +54,16 @@ if (!pool) {
   global.__pgPool = pool;
 }
 
+export async function ensureTasksDueDateColumn() {
+  try {
+    await pool.query(
+      "ALTER TABLE tasks ADD COLUMN IF NOT EXISTS due_date TIMESTAMP WITH TIME ZONE",
+    );
+  } catch (error) {
+    if (!/column .* already exists/i.test(error.message)) {
+      throw error;
+    }
+  }
+}
+
 export default pool;

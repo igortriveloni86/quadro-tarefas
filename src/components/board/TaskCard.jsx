@@ -1,7 +1,7 @@
 import React from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import { Calendar, Pencil, Trash2, GripVertical, CheckCircle2 } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, differenceInCalendarDays, isToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 const priorityStyles = {
@@ -15,6 +15,47 @@ const priorityLabels = {
   media: 'Média',
   alta: 'Alta',
 };
+
+function DueBadge({ dueDate, isCompleted }) {
+  if (!dueDate || isCompleted) return null;
+
+  const date = new Date(dueDate);
+  const diff = differenceInCalendarDays(date, new Date());
+
+  if (diff < 0) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-red-700">
+        <Calendar className="w-3 h-3" />
+        Atrasado
+      </span>
+    );
+  }
+
+  if (isToday(date)) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-700">
+        <Calendar className="w-3 h-3" />
+        Hoje
+      </span>
+    );
+  }
+
+  if (diff <= 7) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-sky-700">
+        <Calendar className="w-3 h-3" />
+        Em {diff}d
+      </span>
+    );
+  }
+
+  return (
+    <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+      <Calendar className="w-3 h-3" />
+      {format(new Date(dueDate), 'dd MMM', { locale: ptBR })}
+    </span>
+  );
+}
 
 export default function TaskCard({ task, index, onEdit, onDelete }) {
   const isCompleted = task.column_name === 'concluidos';
@@ -80,12 +121,7 @@ export default function TaskCard({ task, index, onEdit, onDelete }) {
                     {priorityLabels[task.priority]}
                   </span>
                 )}
-                {task.due_date && (
-                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                    <Calendar className="w-3 h-3" />
-                    {format(new Date(task.due_date), "dd MMM", { locale: ptBR })}
-                  </span>
-                )}
+                <DueBadge dueDate={task.due_date} isCompleted={isCompleted} />
               </div>
             </div>
 

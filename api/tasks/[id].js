@@ -1,7 +1,9 @@
-import pool from "../_db.js";
+import pool, { ensureTasksDueDateColumn } from "../_db.js";
 
 export default async function handler(req, res) {
   try {
+    await ensureTasksDueDateColumn();
+
     // extract id from url path
     const rawUrl = req.url || "";
     const id = rawUrl.split("/").filter(Boolean).pop().split("?")[0];
