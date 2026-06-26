@@ -56,13 +56,23 @@ if (!pool) {
 
 export async function ensureTasksDueDateColumn() {
   try {
-    await pool.query(
-      "ALTER TABLE tasks ADD COLUMN IF NOT EXISTS due_date DATE",
+    // Check if column exists
+    const result = await pool.query(
+      "SELECT column_name FROM information_schema.columns WHERE table_name = 'tasks' AND column_name = 'due_date'",
     );
-  } catch (error) {
-    if (!/column .* already exists/i.test(error.message)) {
-      throw error;
+
+    if (result.rows.length === 0) {
+      // Column doesn't exist, create it as DATE
+      await pool.query("ALTER TABLE tasks ADD COLUMN due_date DATE");
+    } else {
+      // Column exists, convert it to DATE if needed
+      await pool.query(
+        "ALTER TABLE tasks ALTER COLUMN due_date TYPE DATE USING DATE(due_date)",
+      );
     }
+  } catch (error) {
+    // Ignore errors (column already exists in correct format, etc.)
+    console.error("ensureTasksDueDateColumn error:", error.message);
   }
 }
 

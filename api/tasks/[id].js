@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
     if (req.method === "GET") {
       const { rows } = await pool.query(
-        `SELECT id, title, description, column_name, position, priority, labels, due_date, created_date, updated_date
+        `SELECT id, title, description, column_name, position, priority, labels, DATE(due_date) as due_date, created_date, updated_date
          FROM tasks WHERE id = $1`,
         [id],
       );
