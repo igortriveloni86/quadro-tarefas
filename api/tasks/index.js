@@ -24,7 +24,9 @@ export default async function handler(req, res) {
       const column_name =
         req.body?.column_name ?? req.body?.column ?? "segunda";
       const now = new Date().toISOString();
-      const dueDateIso = due_date ? new Date(due_date).toISOString() : null;
+      const dueDateStr = due_date
+        ? new Date(due_date).toISOString().split("T")[0]
+        : null;
       const { rows } = await pool.query(
         `INSERT INTO tasks (title, description, column_name, position, priority, labels, due_date, created_date, updated_date)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
@@ -35,7 +37,7 @@ export default async function handler(req, res) {
           position,
           priority,
           JSON.stringify(labels),
-          dueDateIso,
+          dueDateStr,
           now,
           now,
         ],

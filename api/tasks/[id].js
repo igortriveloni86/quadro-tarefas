@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       let due_date = existingTask.due_date;
       if (req.body?.due_date !== undefined) {
         due_date = req.body.due_date
-          ? new Date(req.body.due_date).toISOString()
+          ? new Date(req.body.due_date).toISOString().split("T")[0]
           : null;
       }
 

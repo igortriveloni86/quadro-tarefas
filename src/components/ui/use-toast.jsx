@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 const TOAST_LIMIT = 20;
 const TOAST_REMOVE_DELAY = 1000000;
+const DEFAULT_TOAST_DURATION = 3000;
 
 const actionTypes = {
   ADD_TOAST: "ADD_TOAST",
@@ -20,18 +21,19 @@ function genId() {
 
 const toastTimeouts = new Map();
 
-const addToRemoveQueue = (toastId) => {
+const addToRemoveQueue = (toastId, duration) => {
   if (toastTimeouts.has(toastId)) {
     return;
   }
 
+  const delay = duration || TOAST_REMOVE_DELAY;
   const timeout = setTimeout(() => {
     toastTimeouts.delete(toastId);
     dispatch({
       type: actionTypes.REMOVE_TOAST,
       toastId,
     });
-  }, TOAST_REMOVE_DELAY);
+  }, delay);
 
   toastTimeouts.set(toastId, timeout);
 };
@@ -63,8 +65,6 @@ export const reducer = (state, action) => {
     case actionTypes.DISMISS_TOAST: {
       const { toastId } = action;
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
       if (toastId) {
         addToRemoveQueue(toastId);
       } else {
@@ -110,7 +110,7 @@ function dispatch(action) {
   });
 }
 
-function toast({ ...props }) {
+function toast({ duration = DEFAULT_TOAST_DURATION, ...props }) {
   const id = genId();
 
   const update = (props) =>
@@ -133,6 +133,10 @@ function toast({ ...props }) {
       },
     },
   });
+
+  if (duration !== null) {
+    addToRemoveQueue(id, duration);
+  }
 
   return {
     id,
