@@ -11,7 +11,7 @@ const columnConfig = {
   sexta: { title: 'Sexta-feira', emoji: '📅', accent: 'bg-fuchsia-500' },
   urgentes: { title: 'Urgentes', emoji: '🔴', accent: 'bg-red-500' },
   analisando: { title: 'Analisando', emoji: '🔍', accent: 'bg-amber-500' },
-  concluidos: { title: 'Concluídos', emoji: '✅', accent: 'bg-emerald-500' },
+  concluidos: { title: 'Concluídos', emoji: '✅', accent: 'bg-emerald-500', softBg: 'bg-emerald-50/80' },
 };
 
 export default function BoardColumn({ columnId, tasks, onAddTask, onEditTask, onDeleteTask }) {
@@ -42,7 +42,9 @@ export default function BoardColumn({ columnId, tasks, onAddTask, onEditTask, on
             ref={provided.innerRef}
             {...provided.droppableProps}
             className={`flex-1 overflow-y-auto space-y-2.5 p-1.5 rounded-xl transition-colors min-h-[100px] ${
-              snapshot.isDraggingOver ? 'bg-primary/5 ring-2 ring-primary/20 ring-dashed' : ''
+              snapshot.isDraggingOver
+                ? 'bg-primary/5 ring-2 ring-primary/20 ring-dashed'
+                : config.softBg || ''
             }`}
           >
             {sortedTasks.map((task, index) => (

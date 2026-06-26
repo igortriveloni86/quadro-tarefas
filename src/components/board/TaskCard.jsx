@@ -1,6 +1,6 @@
 import React from 'react';
 import { Draggable } from '@hello-pangea/dnd';
-import { Calendar, Pencil, Trash2, GripVertical } from 'lucide-react';
+import { Calendar, Pencil, Trash2, GripVertical, CheckCircle2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -17,14 +17,22 @@ const priorityLabels = {
 };
 
 export default function TaskCard({ task, index, onEdit, onDelete }) {
+  const isCompleted = task.column_name === 'concluidos';
+
   return (
     <Draggable draggableId={String(task.id)} index={index}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={`group bg-card rounded-xl p-3.5 shadow-sm border border-border/60 transition-all duration-200 ${
-            snapshot.isDragging ? 'shadow-xl ring-2 ring-primary/30 rotate-2 scale-105' : 'hover:shadow-md hover:border-border'
+          className={`group rounded-xl p-3.5 transition-all duration-200 ${
+            snapshot.isDragging
+              ? 'shadow-xl ring-2 ring-primary/30 rotate-2 scale-105'
+              : 'shadow-sm'
+          } ${
+            isCompleted
+              ? 'bg-emerald-50 border border-emerald-200'
+              : 'bg-card border border-border/60 hover:shadow-md hover:border-border'
           }`}
         >
           <div className="flex items-start gap-2">
@@ -48,10 +56,22 @@ export default function TaskCard({ task, index, onEdit, onDelete }) {
                 </div>
               )}
 
-              <h4 className="text-sm font-medium text-foreground leading-snug">{task.title}</h4>
+              <div className="flex items-center gap-2">
+                <h4 className={`text-sm font-medium leading-snug ${isCompleted ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+                  {task.title}
+                </h4>
+                {isCompleted && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    Concluído
+                  </span>
+                )}
+              </div>
 
               {task.description && (
-                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{task.description}</p>
+                <p className={`text-xs mt-1 line-clamp-2 ${isCompleted ? 'line-through text-muted-foreground' : 'text-muted-foreground'}`}>
+                  {task.description}
+                </p>
               )}
 
               <div className="flex items-center gap-2 mt-2.5 flex-wrap">
