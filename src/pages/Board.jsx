@@ -8,7 +8,7 @@ import { toast } from '@/components/ui/use-toast';
 import BoardColumn from '@/components/board/BoardColumn';
 import TaskDialog from '@/components/board/TaskDialog';
 
-const COLUMNS = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'urgentes', 'analisando', 'concluidos'];
+const COLUMNS = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'urgentes', 'analisando', 'lembretes', 'concluidos'];
 
 export default function Board() {
   const [dialogOpen, setDialogOpen] = useState(false);

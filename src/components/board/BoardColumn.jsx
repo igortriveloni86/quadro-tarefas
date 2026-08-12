@@ -11,6 +11,7 @@ const columnConfig = {
   sexta: { title: 'Sexta-feira', emoji: '📅', accent: 'bg-fuchsia-500' },
   urgentes: { title: 'Urgentes', emoji: '🔴', accent: 'bg-red-500' },
   analisando: { title: 'Analisando', emoji: '🔍', accent: 'bg-amber-500' },
+  lembretes: { title: 'Lembretes', emoji: '🔔', accent: 'bg-yellow-500' },
   concluidos: { title: 'Concluídos', emoji: '✅', accent: 'bg-emerald-500', softBg: 'bg-emerald-50/80' },
 };
 

@@ -31,6 +31,7 @@ const columnOptions = [
   { value: 'sexta', label: 'Sexta-feira' },
   { value: 'urgentes', label: 'Urgentes' },
   { value: 'analisando', label: 'Analisando' },
+  { value: 'lembretes', label: 'Lembretes' },
   { value: 'concluidos', label: 'Concluídos' },
 ];
 
